@@ -7,6 +7,7 @@
 
 
 void timer_run();
+void ST_delay(unsigned int mils);
 unsigned char ST_get_flag(unsigned char timer);
 void ST_set_timer(unsigned char timer, unsigned int mils);
 

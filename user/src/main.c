@@ -25,7 +25,6 @@ void main() {
 			ST_set_timer(1,500);
 			LED1=!LED1;
 		}
-		
 	}
 }
 

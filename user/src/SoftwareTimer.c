@@ -5,6 +5,7 @@
 
 static unsigned int counter[ST_NO_TIMERS];
 static unsigned char flag[ST_NO_TIMERS];
+static unsigned int delay;
 static unsigned char i;
 
 
@@ -23,6 +24,11 @@ unsigned char ST_get_flag(unsigned char timer) {
 	return 0;
 }
 
+void ST_delay(unsigned int mils) {
+	delay = mils;
+	while(delay);
+}
+
 
 void timer_run() { // must be put in 1ms interrupt timer ISR
 	for(i=0; i < ST_NO_TIMERS; i++) {
@@ -32,5 +38,8 @@ void timer_run() { // must be put in 1ms interrupt timer ISR
 				flag[i] = 1;
 			}
 		}
+	}
+	if(delay) {
+		delay--;
 	}
 }
