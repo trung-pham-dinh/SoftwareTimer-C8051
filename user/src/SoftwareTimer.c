@@ -5,13 +5,13 @@
 
 static unsigned int counter[ST_NO_TIMERS];
 static unsigned char flag[ST_NO_TIMERS];
-static unsigned int delay;
 static unsigned char i;
+static unsigned char tick_flag;
 
 
 void ST_set_timer(unsigned char timer, unsigned int mils) {
 	if(timer >= ST_NO_TIMERS) return;
-	counter[timer] = mils;
+	counter[timer] = mils / ST_TICK_PERIOD;
 }
 
 unsigned char ST_get_flag(unsigned char timer) {
@@ -25,12 +25,18 @@ unsigned char ST_get_flag(unsigned char timer) {
 }
 
 void ST_delay(unsigned int mils) {
-	delay = mils;
-	while(delay);
+	unsigned int delay = mils / ST_TICK_PERIOD;
+	while(delay) {
+		while(!tick_flag); // prevent reading delay continuously because it will cause the synchronization problem in problem.txt
+		tick_flag = 0;
+		delay--;
+	}
 }
 
-
-void timer_run() { // must be put in 1ms interrupt timer ISR
+#pragma OT(1)
+void ST_timer_run() { // must be put in timer ISR
+	tick_flag = 1;
+	
 	for(i=0; i < ST_NO_TIMERS; i++) {
 		if(counter[i]) {
 			counter[i]--;
@@ -38,8 +44,5 @@ void timer_run() { // must be put in 1ms interrupt timer ISR
 				flag[i] = 1;
 			}
 		}
-	}
-	if(delay) {
-		delay--;
 	}
 }

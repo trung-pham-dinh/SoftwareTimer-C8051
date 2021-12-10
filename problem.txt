@@ -1,0 +1,29 @@
+Problem: compare a 2bytes variable with 0
+
+It will divide the variable into 2 1byte variable. For example, the variable = 256 -> 0x0100 -> high = 0x01, low = 0x00
+
+The program:
+
+
+unsigned int delay = 0;
+while(1) {
+	delay = 256; 
+	while(delay); // to compare with 0-> it will first load the low byte, then OR with the high byte, then compare the result with 0
+		      // There is a case when the "delay" is 256 (!= 0, low = 0x00, high = 0x01).
+		      // It first load the low byte(0x00)
+		      // before it load the high byte, INTERRUPT OCCURS -> delay-- -> delay = 255 -> 0x00FF -> high byte = 0x00
+		      // It now load the high byte(0x00)
+                      // result after OR is 0!!!!!!!!!!!! -> totally wrong 
+	LED0=!LED0;
+}
+
+void TIMER_ISR() using interrupt0 {
+	if(delay) delay--;
+}
+
+
+
+CONCLUSION: 
+Carefully when calculate with number which has datatype larger than the processing word(1byte in 8051)
+Prevent read and write on the same variable in two place(main and interrupt)
+

@@ -10,10 +10,12 @@
 void Timer_Init()
 {
     TCON      = 0x10;
-    TMOD      = 0x01;
-    CKCON     = 0x01;
+    TMOD      = 0x31;
+    CKCON     = 0x11;
     TL0       = 0x78;
     TH0       = 0xEC;
+    TMR2RLL   = 0xF0;
+    TMR2RLH   = 0xDA;
 }
 
 void Port_IO_Init()

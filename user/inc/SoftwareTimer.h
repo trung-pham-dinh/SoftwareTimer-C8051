@@ -3,8 +3,8 @@
 
 
 
-#define ST_NO_TIMERS 2
-
+#define ST_NO_TIMERS 2 // edit this
+#define ST_TICK_PERIOD 2 // edit this(ms)
 
 void timer_run();
 void ST_delay(unsigned int mils);
